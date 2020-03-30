@@ -1,0 +1,14 @@
+{
+  "name": "@acala-squirrel/api-deriver",
+  "version": "0.0.1",
+  "description": "api deriver",
+  "author": "Acala Developers <hello@acala.one>",
+  "license": "ISC",
+  "main": "src/index.js",
+  "dependencies": {
+    "@acala-network/types": "^0.2.0-beta.19",
+    "@orml/jsonrpc": "^0.2.0-beta.17",
+    "@polkadot/api": "^1.4.0-beta.46",
+    "rxjs": "^6.5.3"
+  }
+}

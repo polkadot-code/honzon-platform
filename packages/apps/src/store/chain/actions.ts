@@ -1,4 +1,4 @@
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, createAction } from 'typesafe-actions';
 import { ApiRx } from '@polkadot/api';
 import { PriceData, CdpTypeData, AssetList, IssuanceData } from '@honzon-platform/apps/types/store';
 import { Constants } from '@honzon-platform/apps/types/chain-constants';
@@ -7,12 +7,10 @@ interface ConnectParam {
     endpoint: string;
 }
 
-export const CONNECT_ASYNC = '@chain/connect';
-export const connectAsync = createAsyncAction(CONNECT_ASYNC, '@chain/connect/success', '@chain/connnect/failure')<
-    ConnectParam,
-    ApiRx,
-    string
->();
+export const SET_API = '@chain/set_api';
+export const setAPI = createAction(SET_API, action => {
+    return (api: ApiRx) => action(api);
+});
 
 export const FETCH_PRICES_FEED = '@chain/fetch_prices_feed';
 export const fetchPricesFeed = createAsyncAction(

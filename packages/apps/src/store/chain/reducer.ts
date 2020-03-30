@@ -12,17 +12,12 @@ const initialState: ChainState = {
 };
 
 export default createReducer(initialState)
-    .handleAction(actions.connectAsync.success, (state, action) => {
+    .handleAction(actions.setAPI, (state, action) => {
         return {
             ...state,
             app: action.payload,
-            connected: true,
         };
     })
-    .handleAction(actions.fetchPricesFeed.success, (state, action) => ({
-        ...state,
-        pricesFeed: action.payload,
-    }))
     .handleAction(actions.fetchCdpTypes.success, (state, action) => ({
         ...state,
         cdpTypes: action.payload,

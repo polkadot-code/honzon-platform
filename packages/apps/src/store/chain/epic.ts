@@ -1,36 +1,12 @@
-import { WsProvider, ApiRx } from '@polkadot/api';
 import { get } from 'lodash';
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, withLatestFrom, take, first, exhaustMap, mergeMap, startWith } from 'rxjs/operators';
-import { combineLatest, concat, of, empty, interval } from 'rxjs';
+import { filter, map, switchMap, withLatestFrom, first, exhaustMap, mergeMap, startWith } from 'rxjs/operators';
+import { combineLatest, of, empty, interval } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
-import { types as acalaTypes } from '@acala-network/types';
-import ormlRPC from '@orml/jsonrpc';
 
 import { u8aToNumber } from '@honzon-platform/apps/utils';
-import { startLoading, endLoading } from '../loading/reducer';
 import * as actions from './actions';
 import FixedU128 from '@honzon-platform/apps/utils/fixed_u128';
-
-export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
-    action$.pipe(
-        filter(isActionOf(actions.connectAsync.request)),
-        switchMap(({ payload }) => {
-            const { endpoint } = payload;
-            const wsProvider = new WsProvider(endpoint);
-            // FIXME: use a concrete type once polkadotjs fixes inconsistency.
-            const rpc: any = { oracle: Object.values(ormlRPC.oracle.methods) };
-
-            return concat(
-                of(startLoading(actions.CONNECT_ASYNC)),
-                ApiRx.create({ provider: wsProvider, types: acalaTypes as any, rpc }).pipe(
-                    map(actions.connectAsync.success),
-                    take(1),
-                ),
-                of(endLoading(actions.CONNECT_ASYNC)),
-            );
-        }),
-    );
 
 export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(

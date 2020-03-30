@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import { useEnvironment } from '@honzon-platform/apps/hooks/environment';
+import AcalaMandalaLogo from '@honzon-platform/apps/assets/acala-mandala-logo.svg';
 
 export const AcalaLogo: FC = () => {
-    const environment = useEnvironment();
-    return <img src={environment.logo} width={180} height={25} alt="acala-logo" />;
+    return <img src={AcalaMandalaLogo} width={180} height={25} alt="acala-logo" />;
 };

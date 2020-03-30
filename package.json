@@ -6,6 +6,10 @@
     "packages/*"
   ],
   "license": "ISC",
+  "resolutions": {
+    "@polkadot/api": "^1.8.1",
+    "@acala-network/api": "beta"
+  },
   "scripts": {
     "start": "cd packages/apps && react-app-rewired start",
     "build": "cd packages/apps && react-app-rewired build",

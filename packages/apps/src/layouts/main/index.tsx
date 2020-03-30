@@ -1,22 +1,21 @@
-import React, { ReactNode, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
-
-import { loadingSelector } from '@honzon-platform/apps/store/loading/reducer';
 import Loading from '@honzon-platform/apps/components/loading';
 import actions from '@honzon-platform/apps/store/actions';
 import { sideBarConfig } from '@honzon-platform/apps/config';
-import { accountStoreSelector } from '@honzon-platform/apps/store/account/selectors';
+import { SelectAccount } from '@honzon-platform/apps/components/select-account';
+import useMobileMatch from '@honzon-platform/apps/hooks/mobile-match';
+import TxStatus from '@honzon-platform/apps/components/tx-status';
+import { useEnvironment } from '@honzon-platform/hooks/useEnvironment';
+import { NetWorkError } from './components/network-error';
+import { useAccounts } from '@honzon-platform/hooks/useAccounts';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import Header from './components/header';
 import Sidebar from './components/side-bar';
 import NoExtension from './components/no-extension';
 import NoAccount from './components/no-account';
-import { SelectAccount } from '@honzon-platform/apps/components/select-account';
-import useMobileMatch from '@honzon-platform/apps/hooks/mobile-match';
-import TxStatus from '@honzon-platform/apps/components/tx-status';
-import { useEnvironment } from '@honzon-platform/apps/hooks/environment';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,31 +49,50 @@ const MainLayout: React.FC<Props> = props => {
     const { children } = props;
     const dispatch = useDispatch();
     const classes = useStyles();
-    const connectLoading = useSelector(loadingSelector(actions.chain.CONNECT_ASYNC));
-    const [accountStatus, accountList, extensionStatus, accountError] = useSelector(
-        accountStoreSelector(['accountStatus', 'accountList', 'extensionStatus', 'error']),
-    );
-    const { endpoint } = useEnvironment();
-
+    const [test, setTest] = useState<boolean>(false);
+    const { error: networkError, loading, connected, api } = useEnvironment();
+    const {
+        ready: accountsReady,
+        extensionError,
+        accountError,
+        activeAccount,
+        setActiveAccount,
+        accounts,
+    } = useAccounts();
     const match = useMobileMatch('sm');
-    // const connectStatus = useSelector(connectedSelector);
 
     useEffect(() => {
-        // connect to blockchain
-        dispatch(actions.chain.connectAsync.request({ endpoint }));
-        dispatch(actions.account.importAccount.request(''));
-    }, [dispatch]);
-
-    const renderContent = () => {
-        if (extensionStatus === 'success' && accountStatus === 'success') {
-            return <div className={classes.content}>{children}</div>;
+        if (connected) {
+            dispatch(actions.chain.setAPI(api));
+            setTest(true);
         }
+    }, [api, connected]);
 
-        return null;
+    const handleAccountSelect = (account: InjectedAccountWithMeta) => {
+        setActiveAccount(account.address, api);
+        dispatch(actions.account.setAccount(account));
     };
 
-    // don't change this, beacuse we must ensure that DAPP connected the blockchain successful
-    if (connectLoading) {
+    const renderContent = () => {
+        if (extensionError) {
+            return <NoExtension open={true} />;
+        }
+        if (accountError) {
+            return <NoAccount open={true} />;
+        }
+        if (!activeAccount) {
+            return <SelectAccount open={true} accounts={accounts} onSelect={handleAccountSelect} />;
+        }
+        if (connected && activeAccount) {
+            return <div className={classes.content}>{children}</div>;
+        }
+    };
+
+    if (networkError) {
+        return <NetWorkError open={networkError} />;
+    }
+
+    if (!connected || loading) {
         return <Loading />;
     }
 
@@ -82,16 +100,9 @@ const MainLayout: React.FC<Props> = props => {
         <div className={classes.root}>
             {match ? <Header /> : <Sidebar config={sideBarConfig} />}
             {renderContent()}
-            <NoExtension open={accountError === 'no extends found'} />
-            <NoAccount open={accountError === 'no accounts found'} />
-            <SelectAccount open={accountList.length !== 0 && accountStatus === 'none'} />
             <TxStatus />
         </div>
     );
-};
-
-MainLayout.propTypes = {
-    children: PropTypes.node,
 };
 
 export default MainLayout;

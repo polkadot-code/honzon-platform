@@ -38,28 +38,8 @@ export default createReducer(initialState)
         ...state,
         updateLoanStatus: 'none',
     }))
-    .handleAction(actions.importAccount.success, (state, action) => ({
-        ...state,
-        extensionStatus: 'success',
-        accountList: action.payload,
-    }))
-    .handleAction(actions.selectAccount.success, (state, action) => ({
+    .handleAction(actions.setAccount, (state, action) => ({
         ...state,
         account: action.payload,
         accountStatus: 'success',
     }))
-    .handleAction([actions.importAccount.failure, actions.selectAccount.failure], (state, action) => {
-        const newState = { ...state, error: action.payload };
-
-        if (action.payload === 'no extends found') {
-            newState['extensionStatus'] = 'failure';
-        }
-        if (action.payload === 'no accounts found') {
-            newState['accountStatus'] = 'failure';
-        }
-        if (action.payload === 'set singer failure') {
-            newState['accountStatus'] = 'failure';
-        }
-
-        return newState;
-    });

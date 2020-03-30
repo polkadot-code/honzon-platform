@@ -40,7 +40,7 @@ export function calcCollateralRatio(collateralAmount: FixedU128, debitAmount: Fi
     return collateralAmount.div(debitAmount);
 }
 
-const YEAR = 364 * 24 * 60 * 60; // second of one yera
+const YEAR = 365 * 24 * 60 * 60; // second of one yera
 export function calcStableFee(stableFee: FixedU128, blockTime: number): FixedU128 {
     return FixedU128.fromNatural((1 + stableFee.toNumber()) ** ((YEAR / blockTime) * 1000) - 1);
 }

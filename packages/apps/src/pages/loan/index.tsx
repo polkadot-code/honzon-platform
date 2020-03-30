@@ -69,8 +69,6 @@ const Loan: React.FC = () => {
     const classes = useStyle();
     const match = useMobileMatch('sm');
     const mdMatch = useMobileMatch('md');
-    const api = useApi();
-
     useEffect(() => {
         // fetch default constants
         dispatch(actions.chain.fetchConstants.request({}));

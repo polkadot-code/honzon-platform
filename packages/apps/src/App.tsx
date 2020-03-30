@@ -8,7 +8,7 @@ import theme from './theme';
 import createStore from './store';
 import { Translator, Provider as I18nProvider } from './hooks/i18n';
 import i18n from './i18n';
-import { EnvironmentProvider } from './hooks/environment';
+import { Environment } from '@honzon-platform/hooks/environment';
 
 // create redux store
 const store = createStore();
@@ -18,10 +18,10 @@ const translator = new Translator({
     i18n: i18n,
 });
 
-const App: React.FC = function() {
+const App: React.FC = function () {
     return (
         <Router>
-            <EnvironmentProvider>
+            <Environment>
                 <StoreProvider store={store}>
                     <I18nProvider translator={translator}>
                         <ThemeProvider theme={theme}>
@@ -30,7 +30,7 @@ const App: React.FC = function() {
                         </ThemeProvider>
                     </I18nProvider>
                 </StoreProvider>
-            </EnvironmentProvider>
+            </Environment>
         </Router>
     );
 };

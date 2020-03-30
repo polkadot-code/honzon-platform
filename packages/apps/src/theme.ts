@@ -121,7 +121,7 @@ const createTheme = (options: ThemeOptions) =>
                     color: COLOR_GRAY,
                 },
                 secondary: {
-                    ...createTypography(22, 32, 500),
+                    ...createTypography(15, 22, 500),
                     color: COLOR_BLACK,
                 },
                 multiline: {

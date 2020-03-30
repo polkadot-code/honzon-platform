@@ -7,10 +7,8 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface Props {
-    open: boolean;
-}
-const NoAccount: React.FC<Props> = ({ open }) => {
+interface Props { open: boolean }
+export const NetWorkError: React.FC<Props> = ({ open }) => {
     const { t } = useTranslate();
     const handleRetry = () => {
         window.location.reload();
@@ -18,7 +16,7 @@ const NoAccount: React.FC<Props> = ({ open }) => {
     return (
         <Dialog open={open} TransitionComponent={Transition}>
             <DialogContent>
-                {t('No account found, please add account in your wallet extension or unlock it!')}
+                {t('Connect To Endpoint Failed, Please Check Your NetWork Status!')}
             </DialogContent>
             <DialogActions>
                 <Button color="primary" onClick={handleRetry}>
@@ -28,5 +26,3 @@ const NoAccount: React.FC<Props> = ({ open }) => {
         </Dialog>
     );
 };
-
-export default NoAccount;

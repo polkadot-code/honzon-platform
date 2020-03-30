@@ -20,6 +20,8 @@
       "@honzon-platform/apps": ["apps/src"],
       "@honzon-platform/hooks/*": ["react-hooks/src/*"],
       "@honzon-platform/hooks": ["react-hooks/src"],
+      "@honzon-platform/api-deriver/*": ["api-deriver/src/*"],
+      "@honzon-platform/api-deriver": ["api-deriver/src"],
     },
     "skipDefaultLibCheck": true
   },

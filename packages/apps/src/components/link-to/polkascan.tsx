@@ -1,16 +1,16 @@
 import React, { FC, ReactNode } from 'react';
-import { useEnvironment } from '@honzon-platform/apps/hooks/environment';
 
 interface Props {
     extrinsic?: string;
     children: ReactNode;
 }
+const POLKASCAN_PREFIX = 'https://polkascan.io/pre/acala-mandala';
 export const LinkToPolkascan: FC<Props> = props => {
-    const environment = useEnvironment();
     let link = '';
+
     // transaction
     if (props.extrinsic) {
-        link = `${environment.polkascanPrefix}/extrinsic/${props.extrinsic}`;
+        link = `${POLKASCAN_PREFIX}/extrinsic/${props.extrinsic}`;
     }
     return (
         <a href={link} target="_blank" rel="noopener noreferrer">
